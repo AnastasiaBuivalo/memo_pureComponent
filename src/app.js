@@ -1,43 +1,49 @@
-import React, {Component} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {Container} from 'react-bootstrap';
 import * as ReactDOM from 'react-dom'
 import './app.css';
 
-class Form extends Component {
-    setInputRef = (elem) =>{
-        this.myRef = elem;
-    }
+const Form = (props)=> {
+    // setInputRef = (elem) =>{
+    //     this.myRef = elem;
+    // }
     // componentDidMount = () =>{
     //     this.myRef.current.focus();
     // }
 
-    focusFirstTI = ()=>{
-        if(this.myRef)
-            this.myRef.focus();
-    }
-    render() {
-        return (
-            <Container>
-                <form onClick = {this.focusFirstTI}
-                 className="w-50 border mt-5 p-3 m-auto"
-                 style={{'overflow': 'hidden', 
-                 'position': 'relative'}}>
-                    <div className="mb-3">
-                        <label htmlFor="exampleFormControlInput1" className="form-label">Email address</label>
-                        <input  ref = {this.setInputRef} type="email" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="exampleFormControlTextarea1" className="form-label">Example textarea</label>
-                        <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                    </div>
-                    <Portal>
-                        <Message/>
-                    </Portal>
+    const myRef = useRef(null);
+    const [text, setText] = useState('');
+    useEffect(()=>{
+        console.log(myRef.current);
+        myRef.current = text;
+    })
 
-                </form>
-            </Container>
-        )
-    }
+    // focusFirstTI = ()=>{
+    //     if(this.myRef)
+    //         this.myRef.focus();
+    // }
+    //onClick = {this.focusFirstTI}
+    return (
+        <Container>
+            <form 
+                className="w-50 border mt-5 p-3 m-auto"
+                style={{'overflow': 'hidden', 
+                'position': 'relative'}}>
+                <div className="mb-3">
+                    <label htmlFor="exampleFormControlInput1" className="form-label">Email address</label>
+                    <input onChange={(e)=> setText(e.target.value)} type="email" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="exampleFormControlTextarea1" className="form-label">Example textarea</label>
+                    <textarea value = {myRef.current} className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div>
+                <Portal>
+                    <Message/>
+                </Portal>
+
+            </form>
+        </Container>
+    )
     
 }
 
