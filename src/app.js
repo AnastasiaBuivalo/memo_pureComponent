@@ -3,6 +3,19 @@ import {Container} from 'react-bootstrap';
 import * as ReactDOM from 'react-dom'
 import './app.css';
 
+const useImputWithValidate = (initialValue)=>{
+    const [value, setValue] = useState(initialValue);
+
+    const validateInput = ()=>{
+        return value.search(/\d/) >= 0;
+    }
+    const onChange = (event) =>{
+        setValue(event.target.value);
+    }
+
+    return {value, validateInput, onChange}
+}
+
 const Form = (props)=> {
     // setInputRef = (elem) =>{
     //     this.myRef = elem;
@@ -11,18 +24,17 @@ const Form = (props)=> {
     //     this.myRef.current.focus();
     // }
 
-    const myRef = useRef(null);
-    const [text, setText] = useState('');
-    useEffect(()=>{
-        console.log(myRef.current);
-        myRef.current = text;
-    })
+    const text = useImputWithValidate('');
+    const textArea = useImputWithValidate('');
 
-    // focusFirstTI = ()=>{
-    //     if(this.myRef)
-    //         this.myRef.focus();
-    // }
-    //onClick = {this.focusFirstTI}
+    const color = text.validateInput()? 'text-danger': null;
+    //const myRef = useRef(null);
+
+    // useEffect(()=>{
+    //     console.log(myRef.current);
+    //     myRef.current = text;
+    // })
+
     return (
         <Container>
             <form 
@@ -30,12 +42,22 @@ const Form = (props)=> {
                 style={{'overflow': 'hidden', 
                 'position': 'relative'}}>
                 <div className="mb-3">
+                    <input 
+                    value = {`${text.value}/${textArea.value}`}
+                    type="text" 
+                    className={`form-control ${color}`}
+                    readOnly/>
                     <label htmlFor="exampleFormControlInput1" className="form-label">Email address</label>
-                    <input onChange={(e)=> setText(e.target.value)} type="email" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
+                    <input onChange= {text.onChange} type="email" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="exampleFormControlTextarea1" className="form-label">Example textarea</label>
-                    <textarea value = {myRef.current} className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    <textarea 
+                    onChange={textArea.onChange}
+                    // value = {myRef.current} 
+                    className="form-control" 
+                    id="exampleFormControlTextarea1" 
+                    rows="3"></textarea>
                 </div>
                 <Portal>
                     <Message/>
